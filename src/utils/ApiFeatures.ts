@@ -1,16 +1,9 @@
 import { Document, Query } from 'mongoose';
 
-import { IQuery } from '@/types';
+import { IPaginationResult, IQuery } from '@/types';
 
 export class ApiFeatures<T extends Document> {
-  paginationResult: {
-    totalPages: number;
-    page: number;
-    limit: number;
-    total: number;
-    hasPrev: boolean;
-    hasNext: boolean;
-  } = {
+  paginationResult:IPaginationResult = {
     totalPages: 0,
     page: 0,
     limit: 0,

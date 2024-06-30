@@ -5,9 +5,9 @@ import { ApiError } from './api.error';
 import { MessageType, ResponseStatus } from '@/types/enums';
 
 export class TimeExceedError extends ApiError {
-  constructor(message: string) {
+  constructor(message_en: string) {
     super({
-      messages: [{ message, type: MessageType.ERROR }],
+      messages: [{ message_en, type: MessageType.ERROR }],
       statusCode: StatusCodes.REQUEST_TIMEOUT,
       status: ResponseStatus.FAIL,
     });

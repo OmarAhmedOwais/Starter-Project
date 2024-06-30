@@ -1,9 +1,10 @@
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { MessageType, ResponseStatus } from '@/types/enums';
+import { config } from 'config/config';
 interface ApiErrorOptions {
   statusCode: StatusCodes;
-  messages: { message: string; type?: MessageType }[];
+  messages: { message_en: string;message_ar?:string; type?: MessageType }[];
   metadata?: any;
   status: ResponseStatus;
 }
@@ -21,7 +22,7 @@ export class ApiError extends Error {
     this.messages = messages;
     this.metadata = metadata;
     this.stack =
-      process.env.NODE_ENV === 'production'
+      config.NODE_ENV === 'production'
         ? 'You are in production'
         : this.stack;
   }

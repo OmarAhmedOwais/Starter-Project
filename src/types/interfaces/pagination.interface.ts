@@ -11,4 +11,6 @@ export interface IPaginationResult {
     page: number;
     limit: number;
     total: number;
+    hasPrev: boolean;
+    hasNext: boolean;
 }

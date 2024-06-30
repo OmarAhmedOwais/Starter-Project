@@ -15,7 +15,7 @@ export const register = expressAsyncHandler(
 
     if (!newUser) {
       throw new BadRequestError([
-        { message: 'Error Registering The User', type: MessageType.ERROR },
+        { message_en: 'Error Registering The User', type: MessageType.ERROR },
       ]);
     }
 
@@ -26,7 +26,7 @@ export const register = expressAsyncHandler(
     const response = new ApiResponse({
       messages: [
         {
-          message: 'registered successfully',
+          message_en: 'registered successfully',
           type: MessageType.SUCCESS,
         },
       ],
@@ -45,7 +45,7 @@ export const login = expressAsyncHandler(
     if (!user || !Password.compare(password, user.password)) {
       throw new BadRequestError([
         {
-          message: 'Invalid Phone Number or Password',
+          message_en: 'Invalid Phone Number or Password',
           type: MessageType.ERROR,
         },
       ]);
@@ -58,7 +58,7 @@ export const login = expressAsyncHandler(
     const response = new ApiResponse({
       messages: [
         {
-          message: 'logged in successfully',
+          message_en: 'logged in successfully',
           type: MessageType.SUCCESS,
         },
       ],
@@ -76,7 +76,7 @@ export const logout = expressAsyncHandler(
     const response = new ApiResponse({
       messages: [
         {
-          message: 'logged out successfully',
+          message_en: 'logged out successfully',
           type: MessageType.SUCCESS,
         },
       ],

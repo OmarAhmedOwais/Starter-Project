@@ -9,8 +9,8 @@ export class InternalServerError extends ApiError {
     super({
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       messages: [
-        { message: 'Something went wrong', type: MessageType.ERROR },
-        { message: error.message, type: MessageType.ERROR },
+        { message_en: 'Something went wrong', type: MessageType.ERROR },
+        { message_en: error.message, type: MessageType.ERROR },
       ],
       metadata: error,
       status: ResponseStatus.ERROR,

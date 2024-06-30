@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 import 'colors';
-import dotenv from 'dotenv';
-dotenv.config({ path: 'config/config.env' });
-const MONGO_URI = process.env.MONGO_URI!;
+import { config } from './config';
+
+const MONGO_URI = config.MONGO_URI!;
 
 export default function db_connection(): void {
   mongoose.set('strictQuery', true); // Add this line
   mongoose
-    .connect(MONGO_URI, { dbName: process.env.DB_NAME })
+    .connect(MONGO_URI, { dbName: config.DB_NAME })
     .then(() => {
       console.log('MongoDB connected successfully'.green);
     })
