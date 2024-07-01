@@ -1,89 +1,55 @@
 import { Request, Response } from 'express';
-import expressAsyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
-
-import { authService } from '@/services';
-import { ApiResponse, Password, generateToken } from '@/utils';
+import { ApiResponse, asyncUtil } from '@/utils';
+import { authService } from '@/services'; // Import authService
 import { MessageType, registerBody } from '@/types';
-import { BadRequestError } from '@/errors';
 
-export const register = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    const userBody = <registerBody>req.body;
-    userBody.password = Password.hash(userBody.password);
-    const newUser = await authService.registerUser(userBody);
+export const register = asyncUtil(async (req: Request, res: Response) => {
+  const userBody = req.body as registerBody;
+  const { newUser, token } = await authService.registerUser(userBody);
 
-    if (!newUser) {
-      throw new BadRequestError([
-        { message_en: 'Error Registering The User', type: MessageType.ERROR },
-      ]);
-    }
+  req.session = { token };
 
-    const token = generateToken({ id: newUser.id });
+  const response = new ApiResponse({
+    messages: [
+      { message_en: 'registered successfully', type: MessageType.SUCCESS },
+    ],
+    statusCode: StatusCodes.CREATED,
+    data: { newUser },
+  });
 
-    req.session = { token };
+  res.status(response.statusCode).json(response);
+});
 
-    const response = new ApiResponse({
-      messages: [
-        {
-          message_en: 'registered successfully',
-          type: MessageType.SUCCESS,
-        },
-      ],
-      statusCode: StatusCodes.CREATED,
-      data: { newUser },
-    });
-    res.status(response.statusCode).json(response);
-  },
-);
+export const login = asyncUtil(async (req: Request, res: Response) => {
+  const { phone, password } = req.body;
+  const { user, token } = await authService.login(phone, password);
 
-export const login = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    const { phone, password } = req.body;
-    const user = await authService.getUserByPhone(phone);
+  req.session = { token };
 
-    if (!user || !Password.compare(password, user.password)) {
-      throw new BadRequestError([
-        {
-          message_en: 'Invalid Phone Number or Password',
-          type: MessageType.ERROR,
-        },
-      ]);
-    }
+  const response = new ApiResponse({
+    messages: [
+      { message_en: 'logged in successfully', type: MessageType.SUCCESS },
+    ],
+    statusCode: StatusCodes.OK,
+    data: { user },
+  });
 
-    const token = generateToken({ id: user.id });
+  res.status(response.statusCode).json(response);
+});
 
-    req.session = { token };
+export const logout = asyncUtil(async (req: Request, res: Response) => {
+  await authService.logout();
 
-    const response = new ApiResponse({
-      messages: [
-        {
-          message_en: 'logged in successfully',
-          type: MessageType.SUCCESS,
-        },
-      ],
-      statusCode: StatusCodes.OK,
-      data: { user },
-    });
+  req.session = null;
 
-    res.status(response.statusCode).json(response);
-  },
-);
+  const response = new ApiResponse({
+    messages: [
+      { message_en: 'logged out successfully', type: MessageType.SUCCESS },
+    ],
+    statusCode: StatusCodes.OK,
+    data: {},
+  });
 
-export const logout = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    req.session = null;
-    const response = new ApiResponse({
-      messages: [
-        {
-          message_en: 'logged out successfully',
-          type: MessageType.SUCCESS,
-        },
-      ],
-      statusCode: StatusCodes.OK,
-      data: {},
-    });
-
-    res.status(response.statusCode).json(response);
-  },
-);
+  res.status(response.statusCode).json(response);
+});
