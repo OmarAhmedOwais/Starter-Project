@@ -1,11 +1,10 @@
-
 import { Password, generateToken } from '@/utils';
 import { MessageType, registerBody } from '@/types';
 import { BadRequestError } from '@/errors';
 import { User } from '@/models';
 
-export const authService = {
-  registerUser: async (userBody: registerBody) => {
+export class AuthService {
+  async registerUser(userBody: registerBody) {
     try {
       const newUser = new User(userBody);
       newUser.password = Password.hash(userBody.password);
@@ -18,9 +17,9 @@ export const authService = {
         { message_en: 'Error Registering The User', type: MessageType.ERROR },
       ]);
     }
-  },
+  }
 
-  login: async (phone: string, password: string) => {
+  async login(phone: string, password: string) {
     try {
       const user = await User.findOne({ phone });
 
@@ -40,10 +39,10 @@ export const authService = {
         { message_en: 'Invalid Phone Number or Password', type: MessageType.ERROR },
       ]);
     }
-  },
+  }
 
-  logout: async () => {
+  async logout() {
     // Add any necessary logic for logout if needed
     return true;
-  },
-};
+  }
+}
