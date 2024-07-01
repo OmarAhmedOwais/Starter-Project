@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { authRouter } from './auth.router';
+import { authRouter } from './src/authentication/auth.router';
 
 
 const mountRouter = Router();

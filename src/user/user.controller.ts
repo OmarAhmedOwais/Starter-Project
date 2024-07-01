@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { UserService } from '@/services';
-import { ApiResponse, asyncUtil } from '@/utils';
+
+import { UserService } from './user.service';
+import { ApiResponse, asyncHandler } from '@/utils';
 import { IUser, MessageType } from '@/types';
 import { NotFoundError } from '@/errors';
 
@@ -13,7 +14,7 @@ export class UserController {
     this.userService = new UserService();
   }
 
-  createUser = asyncUtil(async (req: Request, res: Response) => {
+  createUser = asyncHandler(async (req: Request, res: Response) => {
     const user = await this.userService.createUser(req.body as IUser);
     const response = new ApiResponse({
       messages: [
@@ -25,7 +26,7 @@ export class UserController {
     res.status(response.statusCode).json(response);
   });
 
-  getUsers = asyncUtil(async (req: Request, res: Response) => {
+  getUsers = asyncHandler(async (req: Request, res: Response) => {
     const users = await this.userService.getUsers();
     const response = new ApiResponse({
       messages: [
@@ -37,7 +38,7 @@ export class UserController {
     res.status(response.statusCode).json(response);
   });
 
-  getUser = asyncUtil(async (req: Request, res: Response) => {
+  getUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const user = await this.userService.getUser(id);
     if (!user) {
@@ -64,7 +65,7 @@ export class UserController {
     }
   });
 
-  updateUser = asyncUtil(async (req: Request, res: Response) => {
+  updateUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const userData = req.body as IUser;
     const updatedUser = await this.userService.updateUser(id, userData);
@@ -92,7 +93,7 @@ export class UserController {
     }
   });
 
-  deleteUser = asyncUtil(async (req: Request, res: Response) => {
+  deleteUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const deletedUser = await this.userService.deleteUser(id);
     if (!deletedUser) {

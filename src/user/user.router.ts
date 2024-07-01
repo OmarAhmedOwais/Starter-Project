@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { UserController } from '@/controllers'; // Adjust the import path as necessary
+
+import { UserController } from './user.controller';
 import { authMiddleware, allowedTo } from '@/middlewares';
 import { UserRole } from '@/types';
 

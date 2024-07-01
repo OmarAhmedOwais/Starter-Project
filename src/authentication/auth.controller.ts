@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { ApiResponse, asyncUtil } from '@/utils';
-import { AuthService } from '@/services'; // Adjust the import path as necessary
+import { ApiResponse, asyncHandler } from '@/utils';
+
+import { AuthService } from './auth.service';
 import { MessageType, registerBody } from '@/types';
 
 export class AuthController {
@@ -11,7 +12,7 @@ export class AuthController {
     this.authService = new AuthService();
   }
 
-  register = asyncUtil(async (req: Request, res: Response) => {
+  register = asyncHandler(async (req: Request, res: Response) => {
     const userBody = req.body as registerBody;
     const { newUser, token } = await this.authService.registerUser(userBody);
 
@@ -28,7 +29,7 @@ export class AuthController {
     res.status(response.statusCode).json(response);
   });
 
-  login = asyncUtil(async (req: Request, res: Response) => {
+  login = asyncHandler(async (req: Request, res: Response) => {
     const { phone, password } = req.body;
     const { user, token } = await this.authService.login(phone, password);
 
@@ -45,7 +46,7 @@ export class AuthController {
     res.status(response.statusCode).json(response);
   });
 
-  logout = asyncUtil(async (req: Request, res: Response) => {
+  logout = asyncHandler(async (req: Request, res: Response) => {
     await this.authService.logout();
 
     req.session = null;

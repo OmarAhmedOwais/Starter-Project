@@ -1,10 +1,9 @@
-type AsyncFunction = (...args: any[]) => Promise<any>;
-// express async handler
-const asyncUtil = (fn: AsyncFunction) =>
-  function asyncUtilWrap(...args: any[]): Promise<any> {
-    const fnReturn = fn(...args);
-    const next = args[args.length - 1];
-    return Promise.resolve(fnReturn).catch(next);
-  };
+import { RequestHandler } from 'express';
 
-export { asyncUtil };
+// Improved express async handler
+const asyncHandler =
+  (fn: RequestHandler): RequestHandler =>
+  (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch(next);
+
+export { asyncHandler };

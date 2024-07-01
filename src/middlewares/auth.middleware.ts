@@ -3,8 +3,9 @@ import { NextFunction, Request, Response } from 'express';
 
 import { UnauthorizedError } from '@/errors';
 import { verifyToken } from '@/utils';
-import { userService } from '@/services';
+import { UserService } from '../user/user.service';
 
+const userService = new UserService();
 export const authMiddleware = expressAsyncHandler(
   async (req: Request, _res: Response, next: NextFunction) => {
     const token = <string | undefined>req.session?.token;
