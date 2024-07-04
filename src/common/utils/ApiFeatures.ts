@@ -1,6 +1,6 @@
 import { Document, Query } from 'mongoose';
 
-import { IPaginationResult, IQuery } from '@/types';
+import { IPaginationResult, IQuery } from '@/data/types';
 
 export class ApiFeatures<T extends Document> {
   paginationResult:IPaginationResult = {

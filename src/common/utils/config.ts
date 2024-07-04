@@ -1,5 +1,5 @@
 import { envVarsSchema } from "@/common/validation";
-import { IConfig } from "@/types";
+import { IConfig } from "@/data/types";
 import Joi from "joi";
 
 export const validateEnv = (obj: object): { error: Joi.ValidationError | undefined, value: IConfig } => {

@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 
-import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 import { ApiResponse, asyncHandler } from '@/common/utils';
-import { IUser, MessageType } from '@/types';
+import { IUser, MessageType } from '@/data/types';
 import { NotFoundError } from '@/common/errors';
 
 export class UserController {

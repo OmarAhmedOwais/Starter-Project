@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 import { IUser } from '../types/interfaces/user.interface';
 
-import { Models, UserRole, UserStatus } from '@/types';
+import { Models, UserRole, UserStatus } from '@/data/types';
 
 const userSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },

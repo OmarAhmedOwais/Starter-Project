@@ -7,7 +7,7 @@ import {
   checkSchema,
 } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { MessageType, ResponseStatus } from '@/types';
+import { MessageType, ResponseStatus } from '@/data/types';
 
 export const validationMiddleware = (schema: Schema) =>
   expressAsyncHandler(async (req, _res, next) => {

@@ -1,6 +1,6 @@
 // global environment variables
 
-import { IUser } from '@/types';
+import { IUser } from '@/data/types';
 
 // express
 declare global {

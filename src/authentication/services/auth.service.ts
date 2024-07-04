@@ -1,5 +1,5 @@
 import { Password, generateToken } from '@/common/utils';
-import { MessageType, registerBody } from '@/types';
+import { MessageType, registerBody } from '@/data/types';
 import { BadRequestError } from '@/common/errors';
 import { User } from '@/data/models';
 

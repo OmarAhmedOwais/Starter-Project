@@ -1,5 +1,5 @@
 import joi from "joi";
-import { IConfig } from "@/types";
+import { IConfig } from "@/data/types";
 
 export const envVarsSchema = joi
   .object<IConfig>({

@@ -6,7 +6,7 @@ import { MessageType } from '@/data/types/enums';
 
 export const globalNotFoundMiddleware = expressAsyncHandler(
   async (req: Request, _res: Response): Promise<void> => {
-    const message = `Route not found for ${req.method} ${req.path}`;
-    throw new NotFoundError([{ message, type: MessageType.ERROR }]);
+    const message_en = `Route not found for ${req.method} ${req.path}`;
+    throw new NotFoundError([{ message_en, type: MessageType.ERROR }]);
   },
 );

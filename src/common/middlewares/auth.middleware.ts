@@ -3,17 +3,23 @@ import { NextFunction, Request, Response } from 'express';
 
 import { UnauthorizedError } from '@/common/errors';
 import { verifyToken } from '@/common/utils';
-import { UserService } from '../user/user.service';
+import { UserService } from '../../user/services/user.service';
 
 const userService = new UserService();
 export const authMiddleware = expressAsyncHandler(
   async (req: Request, _res: Response, next: NextFunction) => {
-    const token = <string | undefined>req.session?.token;
+  
+   // check if there is a token in the request header and it starts with Bearer
+   const isTokenExist = req.headers.authorization?.startsWith('Bearer');
+   if (!isTokenExist) {
 
-    if (!token) {
-      throw new UnauthorizedError('Session expired, please login again');
-    }
+      throw new UnauthorizedError('please login to first to get access','يرجى تسجيل الدخول أولاً');
+   }
 
+   // get the token from the request header
+   const token = req.headers.authorization?.split(' ')[1];
+
+  
     const { id } = verifyToken(token);
 
     const user = await userService.getUser(id);

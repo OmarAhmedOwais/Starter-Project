@@ -1,4 +1,4 @@
-import { IUser, UserRole } from '@/types';
+import { IUser, UserRole } from '@/data/types';
 import expressAsyncHandler from 'express-async-handler';
 import { Request, Response, NextFunction } from 'express';
 

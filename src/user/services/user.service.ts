@@ -1,5 +1,5 @@
 import { User } from '@/data/models';
-import { IUser, MessageType } from '@/types';
+import { IUser, MessageType } from '@/data/types';
 import { NotFoundError } from '@/common/errors';
 
 export class UserService {

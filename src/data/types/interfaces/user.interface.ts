@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@/types';
+import { UserRole, UserStatus } from '@/data/types';
 
 export interface IUser {
   _id?: string;
