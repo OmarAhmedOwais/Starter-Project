@@ -1,7 +1,7 @@
 import { Password, generateToken } from '@/utils';
 import { MessageType, registerBody } from '@/types';
 import { BadRequestError } from '@/errors';
-import { User } from '@/models';
+import { User } from '@/data/models';
 
 export class AuthService {
   async registerUser(userBody: registerBody) {

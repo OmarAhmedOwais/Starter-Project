@@ -1,4 +1,4 @@
-import { User } from '@/models';
+import { User } from '@/data/models';
 import { IUser, MessageType } from '@/types';
 import { NotFoundError } from '@/errors';
 
