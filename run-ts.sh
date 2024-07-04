@@ -1,1 +1,0 @@
-ts-node-dev -r tsconfig-paths/register --respawn --transpile-only index.ts
