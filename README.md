@@ -37,7 +37,7 @@ To get a local copy up and running follow these simple steps.
 2. Navigate into the project directory:
 
    ```bash
-   cd e-commerce.1.1
+   cd starter-project
    ```
 
 3. Install dependencies:
