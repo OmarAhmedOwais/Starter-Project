@@ -1,5 +1,5 @@
 import { IConfig } from '@/types';
-import { validateEnv } from '@/utils';
+import { validateEnv } from '@/common/utils';
 import dotenv from "dotenv";
 import path from "path";
 // Determine the environment from the npm script name

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { ApiResponse, asyncHandler } from '@/utils';
+import { ApiResponse, asyncHandler } from '@/common/utils';
 
 import { AuthService } from './auth.service';
 import { MessageType, registerBody } from '@/types';

@@ -1,4 +1,4 @@
-import { envVarsSchema } from "@/validation";
+import { envVarsSchema } from "@/common/validation";
 import { IConfig } from "@/types";
 import Joi from "joi";
 

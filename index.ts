@@ -12,7 +12,7 @@ import { config } from 'config/config';
 
 const COOKIE_MAX_AGE = 2 * 24 * 60 * 60 * 1000; //  2 * 24 hours = 2 days
 
-import { globalErrorMiddleware, globalNotFoundMiddleware } from '@/middlewares';
+import { globalErrorMiddleware, globalNotFoundMiddleware } from '@/common/middlewares';
 import { mountRouter } from '@/routers';
 
 const app = express();

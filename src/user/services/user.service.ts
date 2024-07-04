@@ -1,6 +1,6 @@
 import { User } from '@/data/models';
 import { IUser, MessageType } from '@/types';
-import { NotFoundError } from '@/errors';
+import { NotFoundError } from '@/common/errors';
 
 export class UserService {
   async createUser(userData: IUser) {

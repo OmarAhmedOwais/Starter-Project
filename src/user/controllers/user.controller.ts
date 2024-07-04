@@ -3,9 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 
 
 import { UserService } from './user.service';
-import { ApiResponse, asyncHandler } from '@/utils';
+import { ApiResponse, asyncHandler } from '@/common/utils';
 import { IUser, MessageType } from '@/types';
-import { NotFoundError } from '@/errors';
+import { NotFoundError } from '@/common/errors';
 
 export class UserController {
   private userService: UserService;

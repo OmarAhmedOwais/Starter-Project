@@ -1,4 +1,4 @@
-import { ApiError } from '@/errors';
+import { ApiError } from '@/common/errors';
 import expressAsyncHandler from 'express-async-handler';
 import {
   matchedData,

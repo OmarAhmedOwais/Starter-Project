@@ -1,6 +1,6 @@
-import { Password, generateToken } from '@/utils';
+import { Password, generateToken } from '@/common/utils';
 import { MessageType, registerBody } from '@/types';
-import { BadRequestError } from '@/errors';
+import { BadRequestError } from '@/common/errors';
 import { User } from '@/data/models';
 
 export class AuthService {

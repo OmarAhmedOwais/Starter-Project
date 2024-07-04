@@ -1,8 +1,8 @@
 import expressAsyncHandler from 'express-async-handler';
 import { NextFunction, Request, Response } from 'express';
 
-import { UnauthorizedError } from '@/errors';
-import { verifyToken } from '@/utils';
+import { UnauthorizedError } from '@/common/errors';
+import { verifyToken } from '@/common/utils';
 import { UserService } from '../user/user.service';
 
 const userService = new UserService();
