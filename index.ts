@@ -1,50 +1,75 @@
 import 'colors';
+import dotenv from 'dotenv';
+import path from 'path';
+// Load environment variables
+const envFile = `.env.${process.env.NODE_ENV}`;
+dotenv.config({ path: path.join(__dirname, `${envFile}`) });
 
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
+// ==================================================================================
+// !!!!!!!!!!!!!!!!!!!!!!!!!! SAFE TO CODE AFTER THIS LINE !!!!!!!!!!!!!!!!!!!!!!!!!!
+// ==================================================================================
+import express, { Request, Response, Application } from 'express';
+import cors, { CorsOptions } from 'cors';
 import cookieSession from 'cookie-session';
+import expressWinston from 'express-winston';
+import { config } from '@/common/config/config';
+import { globalErrorMiddleware, NotFoundMiddleware } from '@/common/middlewares';
+import { mountRouter } from '@/routers';
+import Database from '@/common/config/db_connection';
+import { logger } from '@/common/utils'; // Import the logger
 
-import db_connection from 'config/db_connection';
-
-import { config } from 'config/config';
 
 
 const COOKIE_MAX_AGE = 2 * 24 * 60 * 60 * 1000; //  2 * 24 hours = 2 days
 
-import { globalErrorMiddleware, globalNotFoundMiddleware } from '@/common/middlewares';
-import { mountRouter } from '@/routers';
+// Middleware factory function
+const createMiddleware = <T>(middleware: (options: T) => express.RequestHandler, options: T): express.RequestHandler => {
+  return middleware(options);
+};
 
-const app = express();
+const app: Application = express();
+const notFoundMiddleware = new NotFoundMiddleware();
 
+// Apply middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  cors({
-    origin: config.CORS_ORIGIN,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  }),
-);
+app.use(createMiddleware(cors, {
+  origin: config.CORS_ORIGIN,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+} as CorsOptions));
 
-app.use(
-  cookieSession({
-    name: config.COOKIE_NAME!,
-    keys: [config.COOKIE_SECRET!],
-    maxAge: COOKIE_MAX_AGE,
-  }),
-);
+app.use(createMiddleware(cookieSession, {
+  name: config.COOKIE_NAME!,
+  keys: [config.COOKIE_SECRET!],
+  maxAge: COOKIE_MAX_AGE,
+}));
+
+app.use(createMiddleware(expressWinston.logger, {
+  winstonInstance: logger,
+  meta: false,
+  msg: (req: Request, res: Response) => `${req.method} ${req.url} ${res.statusCode}`,
+  expressFormat: true,
+  colorize: false,
+}));
 
 if (config.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(createMiddleware(expressWinston.logger, {
+    winstonInstance: logger,
+    level: 'debug',
+  }));
 }
+
+// Mount routers
 app.use('/api/v1', mountRouter);
 
-app.all('*', globalNotFoundMiddleware);
+// Apply custom middleware
+app.all('*', notFoundMiddleware.execute);
 app.use(globalErrorMiddleware);
 
+// Start server and initialize database connection
 app.listen(config.PORT, () => {
-  db_connection();
-  console.log(`Server listening on port ${config.PORT}`.cyan.bold);
+  Database.getInstance(); // Singleton pattern for database initialization
+  logger.info(`Server listening on port ${config.PORT}`, { context: 'Bootstrap' });
 });
 
 export default app;

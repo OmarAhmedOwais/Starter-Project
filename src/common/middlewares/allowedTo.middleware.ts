@@ -1,16 +1,18 @@
-import { IUser, UserRole } from '@/data/types';
-import expressAsyncHandler from 'express-async-handler';
+import { BaseMiddleware } from '@/base';
 import { Request, Response, NextFunction } from 'express';
-
 import { UnauthorizedError } from '@/common/errors';
+import { IUser, UserRole } from '@/data/types';
 
-export const allowedTo = (...roles: UserRole[]) =>
-  expressAsyncHandler(
-    async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
-      if (!roles.includes((req.user as IUser)!.role)) {
-        throw new UnauthorizedError('You are not authorized');
-      }
+class AllowedToMiddleware implements BaseMiddleware {
+  constructor(private allowedRoles: UserRole[]) {}
 
-      next();
-    },
-  );
+  execute = (req: Request, _res: Response, next: NextFunction): void => {
+    const userRole = (req.user as IUser)?.role;
+    if (!this.allowedRoles.includes(userRole)) {
+      throw new UnauthorizedError('You are not authorized');
+    }
+    next();
+  };
+}
+
+export { AllowedToMiddleware };

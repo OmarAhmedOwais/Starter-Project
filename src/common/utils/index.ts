@@ -5,3 +5,5 @@ export * from './password';
 export * from './token';
 export * from './async';
 export * from './config';
+export * from './logger';
+export * from './queryBuilder';

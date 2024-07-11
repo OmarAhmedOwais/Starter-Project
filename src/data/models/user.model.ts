@@ -6,7 +6,8 @@ import { Models, UserRole, UserStatus } from '@/data/types';
 
 const userSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },
-  phone: { type: String, required: true, unique: true },
+  email: { type: String, unique: true },
+  phone: { type: String, unique: true },
   password: { type: String, required: true },
   status: {
     type: String,
@@ -14,7 +15,7 @@ const userSchema = new mongoose.Schema<IUser>({
     required: true,
     default: UserStatus.ACTIVE,
   },
-  role: { type: String, enum: Object.values(UserRole), required: true },
+  role: { type: String, enum: Object.values(UserRole), default: UserRole.USER },
 });
 
 export const User = mongoose.model<IUser>(Models.User, userSchema, Models.User);

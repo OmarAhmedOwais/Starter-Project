@@ -1,18 +1,14 @@
+// common/middlewares/globalError.middleware.ts
 import { Request, Response, NextFunction } from 'express';
-
-import { ApiError, InternalServerError } from '@/common/errors';
+import { ApiError } from '@/common/errors';
+import { ErrorHandlerContext } from '@/common/errors/ErrorHandlerContext';
 
 export const globalErrorMiddleware = (
   err: Error | ApiError,
-  _req: Request,
+  req: Request,
   res: Response,
-  _next: NextFunction,
+  next: NextFunction,
 ) => {
-  if ('statusCode' in err) {
-    return res.status(err.statusCode).json(err);
-  }
-
-  const apiError = new InternalServerError(err);
-
-  res.status(apiError.statusCode).json(apiError);
+  const errorHandler = new ErrorHandlerContext(err);
+  errorHandler.handle(err, req, res, next);
 };

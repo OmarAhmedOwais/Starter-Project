@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-
 import { UserService } from '../services/user.service';
 import { ApiResponse, asyncHandler } from '@/common/utils';
 import { IUser, MessageType } from '@/data/types';
@@ -15,7 +14,7 @@ export class UserController {
   }
 
   createUser = asyncHandler(async (req: Request, res: Response) => {
-    const user = await this.userService.createUser(req.body as IUser);
+    const user = await this.userService.create(req.body as IUser);
     const response = new ApiResponse({
       messages: [
         { message_en: 'User Created successfully', type: MessageType.SUCCESS },
@@ -27,7 +26,8 @@ export class UserController {
   });
 
   getUsers = asyncHandler(async (req: Request, res: Response) => {
-    const users = await this.userService.getUsers();
+    const query = req?.query || {};
+    const users = await this.userService.findAll(query);
     const response = new ApiResponse({
       messages: [
         { message_en: 'Users Fetched successfully', type: MessageType.SUCCESS },
@@ -40,7 +40,7 @@ export class UserController {
 
   getUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const user = await this.userService.getUser(id);
+    const user = await this.userService.findById(id);
     if (!user) {
       const error = new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },
@@ -68,7 +68,7 @@ export class UserController {
   updateUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const userData = req.body as IUser;
-    const updatedUser = await this.userService.updateUser(id, userData);
+    const updatedUser = await this.userService.update(id, userData);
     if (!updatedUser) {
       const error = new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },
@@ -95,7 +95,7 @@ export class UserController {
 
   deleteUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const deletedUser = await this.userService.deleteUser(id);
+    const deletedUser = await this.userService.delete(id);
     if (!deletedUser) {
       const error = new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },

@@ -1,9 +1,9 @@
 import { Document, Query } from 'mongoose';
-
 import { IPaginationResult, IQuery } from '@/data/types';
+import { QueryBuilder } from './queryBuilder';
 
 export class ApiFeatures<T extends Document> {
-  paginationResult:IPaginationResult = {
+  paginationResult: IPaginationResult = {
     totalPages: 0,
     page: 0,
     limit: 0,
@@ -24,6 +24,8 @@ export class ApiFeatures<T extends Document> {
   }
 
   filter() {
+    const queryBuilder = new QueryBuilder();
+
     const queryObj = { ...this.queryString };
     const excludedFields = [
       'sort',
@@ -34,11 +36,13 @@ export class ApiFeatures<T extends Document> {
       'populate',
     ];
     excludedFields.forEach((el) => delete queryObj[el]);
+
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(
       /\b(gte|gt|lte|lt|eq|ne|in|nin)\b/g,
       (match) => `$${match}`,
     );
+
     let parsedQueryString;
     if (queryStr.includes('$in')) {
       parsedQueryString = JSON.parse(queryStr);
@@ -47,10 +51,13 @@ export class ApiFeatures<T extends Document> {
       );
 
       parsedQueryString['type']['$in'] = splitedTypes;
-
       queryStr = JSON.stringify(parsedQueryString);
     }
-    this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
+
+    this.mongooseQuery = this.mongooseQuery.find(
+      queryBuilder.addFilter(JSON.parse(queryStr)).build(),
+    );
+
     return this;
   }
 

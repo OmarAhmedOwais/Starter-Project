@@ -1,7 +1,7 @@
-import { config } from 'config/config';
+import { config } from '@/common/config/config';
 import jwt from 'jsonwebtoken';
 
-interface GenerateTokenPayload {
+export interface GenerateTokenPayload {
   id: string;
 }
 export const generateToken = (payload: GenerateTokenPayload): string => {
@@ -15,6 +15,15 @@ interface VerifyTokenPayload extends GenerateTokenPayload {
   createdAt: number;
 }
 
-export const verifyToken = (token: string): VerifyTokenPayload => {
-  return <VerifyTokenPayload>jwt.verify(token, config.JWT_SECRET!);
-};
+
+export function verifyToken(token: string): { id: string } {
+  const secretKey = process.env.JWT_SECRET || 'default_secret';
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    return decoded as { id: string };
+  } catch (error) {
+    throw new Error('Invalid token');
+  }
+}
+

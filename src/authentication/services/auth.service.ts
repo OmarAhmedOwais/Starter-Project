@@ -1,27 +1,49 @@
-import { Password, generateToken } from '@/common/utils';
+import { GenerateTokenPayload, Password, generateToken, logger } from '@/common/utils';
 import { MessageType, registerBody } from '@/data/types';
 import { BadRequestError } from '@/common/errors';
-import { User } from '@/data/models';
+import RepositoryFactory from '@/factories/repositoryFactory';
+import { IUser } from '@/data/types';
+
+const userRepository = RepositoryFactory.createUserRepository();
 
 export class AuthService {
-  async registerUser(userBody: registerBody) {
-    try {
-      const newUser = new User(userBody);
-      newUser.password = Password.hash(userBody.password);
-      await newUser.save();
+  private static instance: AuthService;
 
-      const token = generateToken({ id: newUser._id });
+  private constructor() {
+    // Private constructor to prevent direct instantiation
+  }
+
+  public static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
+    }
+    return AuthService.instance;
+  }
+
+  public async registerUser(userBody: registerBody) {
+    try {
+      const hashedPassword = Password.hash(userBody.password);
+
+      // Create the new user
+      const newUser = await userRepository.create({ ...userBody, password: hashedPassword } as IUser);
+
+      // Generate a token for the new user
+      const token = generateToken({ id: newUser._id?.toString() } as GenerateTokenPayload);
+
       return { newUser, token };
     } catch (error) {
+      // Log the error details for debugging
+      logger.error('Error in registerUser:', error);
+
       throw new BadRequestError([
         { message_en: 'Error Registering The User', type: MessageType.ERROR },
       ]);
     }
   }
 
-  async login(phone: string, password: string) {
+  public async login(phone: string, password: string) {
     try {
-      const user = await User.findOne({ phone });
+      const user = await userRepository.findOne({ phone });
 
       if (!user || !Password.compare(password, user.password)) {
         throw new BadRequestError([
@@ -32,7 +54,7 @@ export class AuthService {
         ]);
       }
 
-      const token = generateToken({ id: user._id });
+      const token = generateToken({ id: user._id?.toString() } as GenerateTokenPayload);
       return { user, token };
     } catch (error) {
       throw new BadRequestError([
@@ -41,7 +63,7 @@ export class AuthService {
     }
   }
 
-  async logout() {
+  public async logout() {
     // Add any necessary logic for logout if needed
     return true;
   }

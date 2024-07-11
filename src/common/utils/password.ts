@@ -1,5 +1,5 @@
+import { config } from '@/common/config/config';
 import * as bcrypt from 'bcrypt';
-import { config } from 'config/config';
 
 export class Password {
   static hash(plainText: string): string {

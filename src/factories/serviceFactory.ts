@@ -1,14 +1,21 @@
-// Copyright 2024 oa147
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     https://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+import { Model, Document } from 'mongoose';
+import { Models } from '@/data/types';
+import { Product, User } from '@/data/models';
+import { UserService } from '@/user/services/user.service';
+import { ProductService } from '@/Product/services/product.service';
+import BaseService from '@/base/baseService';
 
+class ServiceFactory {
+  static createService<T extends Document>(model: Model<T>): BaseService<T> {
+    switch (model.modelName) {
+      case Models.User:
+        return new UserService() as unknown as BaseService<T>;
+      case Models.Product:
+        return new ProductService() as unknown as BaseService<T>;
+      default:
+        return new BaseService(model);
+    }
+  }
+}
+
+export default ServiceFactory;

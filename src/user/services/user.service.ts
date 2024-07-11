@@ -1,19 +1,18 @@
-import { User } from '@/data/models';
 import { IUser, MessageType } from '@/data/types';
 import { NotFoundError } from '@/common/errors';
+import RepositoryFactory from '@/factories/repositoryFactory';
+import BaseService from '@/base/baseService';
+import { User } from '@/data/models';
 
-export class UserService {
-  async createUser(userData: IUser) {
-    const user = new User(userData);
-    return await user.save();
+export class UserService extends BaseService<IUser> {
+  private userRepository = RepositoryFactory.createUserRepository();
+
+  constructor() {
+    super(User); // Pass the User model to the base class constructor
   }
-
-  async getUsers() {
-    return await User.find();
-  }
-
-  async getUser(userId: string) {
-    const user = await User.findById(userId);
+  
+  async findById(userId: string) {
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },
@@ -22,8 +21,8 @@ export class UserService {
     return user;
   }
 
-  async updateUser(userId: string, userData: IUser) {
-    const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true });
+  async update(userId: string, userData: IUser) {
+    const updatedUser = await this.userRepository.update(userId, userData);
     if (!updatedUser) {
       throw new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },
@@ -32,8 +31,8 @@ export class UserService {
     return updatedUser;
   }
 
-  async deleteUser(userId: string) {
-    const deletedUser = await User.findByIdAndDelete(userId);
+  async delete(userId: string) {
+    const deletedUser = await this.userRepository.delete(userId);
     if (!deletedUser) {
       throw new NotFoundError([
         { message_en: 'User not found', type: MessageType.ERROR },
@@ -42,3 +41,4 @@ export class UserService {
     return deletedUser;
   }
 }
+

@@ -1,8 +1,10 @@
 import { UserRole, UserStatus } from '@/data/types';
+import { Document } from 'mongoose';
 
-export interface IUser {
+export interface IUser extends Document {
   _id?: string;
   name: string;
+  email: string;
   password: string;
   phone: string;
   role: UserRole;
@@ -13,6 +15,7 @@ export interface IUser {
 export interface registerBody {
   name: string;
   password: string;
-  phone: string;
-  role: UserRole;
+  email: string;
+  phone?: string;
+  role?: UserRole;
 }
