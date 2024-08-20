@@ -1,7 +1,7 @@
 import { Model, Document } from 'mongoose';
 import { Models } from '@/data/types';
 import { Product, User } from '@/data/models';
-import { UserService } from '@/user/services/user.service';
+import { UserService } from '@/modules/user/user.service';
 import { ProductService } from '@/Product/services/product.service';
 import BaseService from '@/base/baseService';
 

@@ -14,7 +14,7 @@ import cookieSession from 'cookie-session';
 import expressWinston from 'express-winston';
 import { config } from '@/common/config/config';
 import { globalErrorMiddleware, NotFoundMiddleware } from '@/common/middlewares';
-import { mountRouter } from '@/routers';
+import { mountRouter } from '@/common/routers';
 import Database from '@/common/config/db_connection';
 import { logger } from '@/common/utils'; // Import the logger
 

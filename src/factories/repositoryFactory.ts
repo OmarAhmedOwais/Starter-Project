@@ -1,6 +1,6 @@
 import { User } from '@/data/models';
-import AuthRepository from '../authentication/repositories/auth.repository';
-import UserRepository from '../user/repositories/userRepository';
+import AuthRepository from '../modules/authentication/repositories/auth.repository';
+import UserRepository from '../modules/user/repositories/userRepository';
 
 class RepositoryFactory {
   static createUserRepository() {
